@@ -1,3 +1,4 @@
+from extronlib.system import File
 
 class PersistentVariables():
     '''

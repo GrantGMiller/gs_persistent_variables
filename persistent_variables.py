@@ -1,6 +1,7 @@
 from extronlib.system import File
 import json
 
+
 class PersistentVariables():
     '''
     This class is used to easily manage non-volatile variables using the extronlib.system.File class
@@ -40,10 +41,10 @@ class PersistentVariables():
             data = json.loads(file.read())
             file.close()
 
-        #get the old value
+        # get the old value
         oldValue = data.get(varName, None)
 
-        #if the value is different do the callback
+        # if the value is different do the callback
         if oldValue != newValue:
             if callable(self._valueChangesCallback):
                 self._valueChangesCallback(varName, newValue)
@@ -56,7 +57,7 @@ class PersistentVariables():
             file.write(json.dumps(data, indent=4))
             file.close()
 
-    def Get(self, varName):
+    def Get(self, varName, default=None):
         '''
         This will return the value of the variable with varName. Or None if no value is found
         :param varName: name of the variable that was used with .Set()
@@ -74,7 +75,7 @@ class PersistentVariables():
         try:
             varValue = data[varName]
         except KeyError:
-            varValue = None
+            varValue = default
             self.Set(varName, varValue)
 
         return varValue
@@ -86,4 +87,3 @@ class PersistentVariables():
     @ValueChanges.setter
     def ValueChanges(self, callback):
         self._valueChangesCallback = callback
-

@@ -57,7 +57,7 @@ class PersistentVariables():
             file.write(json.dumps(data, indent=4))
             file.close()
 
-    def Get(self, varName, default=None):
+    def Get(self, varName=None, default=None):
         '''
         This will return the value of the variable with varName. Or None if no value is found
         :param varName: name of the variable that was used with .Set()
@@ -70,6 +70,10 @@ class PersistentVariables():
         with File(self.filename, mode='rt') as file:
             data = json.loads(file.read())
             file.close()
+
+        if varName is None:
+            # return all data
+            return data
 
         # Grab the value and return it
         try:

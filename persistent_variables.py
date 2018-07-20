@@ -34,12 +34,8 @@ class PersistentVariables():
         :param newValue: any value hashable by the json library
         :return:
         '''
-        self._CreateFileIfMissing()
 
-        # load the current file
-        with File(self.filename, mode='rt') as file:
-            data = json.loads(file.read())
-            file.close()
+        data = self.Data
 
         # get the old value
         oldValue = data.get(varName, None)
@@ -57,12 +53,8 @@ class PersistentVariables():
             file.write(json.dumps(data, indent=4))
             file.close()
 
-    def Get(self, varName=None, default=None):
-        '''
-        This will return the value of the variable with varName. Or None if no value is found
-        :param varName: name of the variable that was used with .Set()
-        :return:
-        '''
+    @property
+    def Data(self):
         self._CreateFileIfMissing()
         # If the varName does not exist, return None
 
@@ -70,10 +62,24 @@ class PersistentVariables():
         with File(self.filename, mode='rt') as file:
             data = json.loads(file.read())
             file.close()
+        return data
 
-        if varName is None:
-            # return all data
-            return data
+    def Save(self, data):
+        with File(self.filename, mode='wt') as file:
+            file.write(json.dumps(data, indent=2))
+            file.close()
+
+
+    def Get(self, varName=None, default=None):
+        '''
+        This will return the value of the variable with varName. Or None if no value is found
+        :param varName: name of the variable that was used with .Set()
+        :return:
+        '''
+        data = self.Data
+
+        if varName is None and default is None:
+            return data.copy()
 
         # Grab the value and return it
         try:
@@ -83,6 +89,19 @@ class PersistentVariables():
             self.Set(varName, varValue)
 
         return varValue
+
+    def Delete(self, varName):
+        self._CreateFileIfMissing()
+        # If the varName does not exist, return None
+
+        # load the current file
+        with File(self.filename, mode='rt') as file:
+            data = json.loads(file.read())
+            file.close()
+
+        data.pop(varName, None)
+        self.Save(data)
+
 
     @property
     def ValueChanges(self):

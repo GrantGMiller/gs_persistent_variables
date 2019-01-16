@@ -110,3 +110,6 @@ class PersistentVariables():
     @ValueChanges.setter
     def ValueChanges(self, callback):
         self._valueChangesCallback = callback
+
+    def __str__(self):
+        return '<PersistentVariables, filename={}>'.format(self.filename)

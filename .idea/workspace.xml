@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0abda540-ca84-4b75-abaf-3046af968643" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/test_pv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../aes-tools/aes_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/../aes-tools/aes_tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/persistant-variables.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/persistant-variables.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/persistent_variables.py" beforeDir="false" afterPath="$PROJECT_DIR$/persistent_variables.py" afterDir="false" />
+    <list default="true" id="0abda540-ca84-4b75-abaf-3046af968643" name="Default" comment="pv added support for encrypted persistant vars">
+      <change beforePath="$PROJECT_DIR$/test_pv.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_pv.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,8 +39,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test_pv.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            <state relative-caret-position="140">
+              <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
               </folding>
@@ -106,7 +100,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../tcp-connection-handler" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../room_agent_clone" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -166,19 +160,25 @@
       <option name="project" value="LOCAL" />
       <updated>1507902368391</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="pv added support for encrypted persistant vars">
+      <created>1561130857891</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1561130857891</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15700738" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15700738" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32900432" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32900432" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -194,7 +194,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added default value option to PV.Get('varname', defaultValue=None)" />
-    <option name="LAST_COMMIT_MESSAGE" value="added default value option to PV.Get('varname', defaultValue=None)" />
+    <MESSAGE value="pv added support for encrypted persistant vars" />
+    <option name="LAST_COMMIT_MESSAGE" value="pv added support for encrypted persistant vars" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/../aes-tools/aes_tools.py">
@@ -219,8 +220,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test_pv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        <state relative-caret-position="140">
+          <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
           <folding>
             <element signature="e#0#52#0" expanded="true" />
           </folding>

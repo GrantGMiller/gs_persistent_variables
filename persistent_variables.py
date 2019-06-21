@@ -1,7 +1,10 @@
 from extronlib.system import File
 import json
 
-DEBUG = True
+DEBUG = False
+
+oldPrint = print
+
 if DEBUG is False:
     print = lambda *a, **k: None
 
@@ -39,7 +42,10 @@ class PersistentVariables:
         if not self._fileClass.Exists(self.filename):
             # If the file doesnt exist yet, create a blank file
             with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
-                file.write(json.dumps({}))
+                if self._fileMode == 'b':
+                    file.write(json.dumps({}).encode(encoding='iso-8859-1'))
+                else:
+                    file.write(json.dumps({}))
                 file.close()
 
     def Set(self, varName, newValue):
@@ -65,23 +71,41 @@ class PersistentVariables:
 
         # Write new file
         with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
-            file.write(json.dumps(data, indent=4))
+            if self._fileMode == 'b':
+                file.write(json.dumps(data, indent=2).encode(encoding='iso-8859-1'))
+            else:
+                file.write(json.dumps(data, indent=2))
             file.close()
 
     @property
     def Data(self):
+        print('PV.Data')
         self._CreateFileIfMissing()
         # If the varName does not exist, return None
 
         # load the current file
         with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-            data = json.loads(file.read())
+            print('78 file=', file)
+            if self._fileMode == 'b':
+                b = file.read()
+                print('82 b=', b)
+                try:
+                    data = json.loads(b.decode(encoding='iso-8859-1'))
+                except Exception as e:
+                    # probably the encryption key changed
+                    oldPrint('pv Exception:', e)
+                    data = {}
+            else:
+                data = json.loads(file.read())
             file.close()
         return data
 
     def Save(self, data):
         with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
-            file.write(json.dumps(data, indent=2))
+            if self._fileMode == 'b':
+                file.write(json.dumps(data, indent=2).encode(encoding='iso-8859-1'))
+            else:
+                file.write(json.dumps(data, indent=2))
             file.close()
 
     def Get(self, varName=None, default=None):
@@ -111,7 +135,12 @@ class PersistentVariables:
 
         # load the current file
         with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-            data = json.loads(file.read())
+            if self._fileMode == 'b':
+                b = file.read()
+                print('82 b=', b)
+                data = json.loads(b.decode(encoding='iso-8859-1'))
+            else:
+                data = json.loads(file.read())
             file.close()
 
         data.pop(varName, None)

@@ -1,17 +1,32 @@
 from extronlib.system import File
 import json
 
+DEBUG = True
+if DEBUG is False:
+    print = lambda *a, **k: None
 
-class PersistentVariables():
+
+class PersistentVariables:
     '''
     This class is used to easily manage non-volatile variables using the extronlib.system.File class
     '''
 
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, fileClass=None, fileMode=None):
         '''
 
         :param filename: string like 'data.json' that will be used as the file name for the File class
         '''
+        if fileClass is None:
+            self._fileClass = File  # use extronlib.system.File
+
+        else:
+            self._fileClass = fileClass  # use something else, like aes_tools.File
+
+        if fileMode is None:
+            self._fileMode = 't'
+        else:
+            self._fileMode = fileMode
+
         if filename is None:
             filename = 'persistent_variables.json'
         self.filename = filename
@@ -21,9 +36,9 @@ class PersistentVariables():
         self._CreateFileIfMissing()
 
     def _CreateFileIfMissing(self):
-        if not File.Exists(self.filename):
+        if not self._fileClass.Exists(self.filename):
             # If the file doesnt exist yet, create a blank file
-            with File(self.filename, mode='wt') as file:
+            with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
                 file.write(json.dumps({}))
                 file.close()
 
@@ -49,7 +64,7 @@ class PersistentVariables():
         data[varName] = newValue
 
         # Write new file
-        with File(self.filename, mode='wt') as file:
+        with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
             file.write(json.dumps(data, indent=4))
             file.close()
 
@@ -59,21 +74,21 @@ class PersistentVariables():
         # If the varName does not exist, return None
 
         # load the current file
-        with File(self.filename, mode='rt') as file:
+        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
             data = json.loads(file.read())
             file.close()
         return data
 
     def Save(self, data):
-        with File(self.filename, mode='wt') as file:
+        with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
             file.write(json.dumps(data, indent=2))
             file.close()
-
 
     def Get(self, varName=None, default=None):
         '''
         This will return the value of the variable with varName. Or None if no value is found
         :param varName: name of the variable that was used with .Set()
+        param default: returned if the varName is not found
         :return:
         '''
         data = self.Data
@@ -95,13 +110,12 @@ class PersistentVariables():
         # If the varName does not exist, return None
 
         # load the current file
-        with File(self.filename, mode='rt') as file:
+        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
             data = json.loads(file.read())
             file.close()
 
         data.pop(varName, None)
         self.Save(data)
-
 
     @property
     def ValueChanges(self):

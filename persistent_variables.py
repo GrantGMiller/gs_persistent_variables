@@ -86,18 +86,22 @@ class PersistentVariables:
         # load the current file
         with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
             print('78 file=', file)
-            if self._fileMode == 'b':
-                b = file.read()
-                print('82 b=', b)
-                try:
+
+            try:
+                if self._fileMode == 'b':
+                    b = file.read()
+                    print('82 b=', b)
                     data = json.loads(b.decode(encoding='iso-8859-1'))
-                except Exception as e:
-                    # probably the encryption key changed
-                    oldPrint('pv Exception:', e)
-                    data = {}
-            else:
-                data = json.loads(file.read())
+                else:
+                    data = json.loads(file.read())
+
+            except Exception as e:
+                # probably the encryption key changed
+                oldPrint('pv Exception:', e)
+                data = {}
+
             file.close()
+
         return data
 
     def Save(self, data):

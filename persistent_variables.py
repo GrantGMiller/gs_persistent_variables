@@ -55,6 +55,9 @@ class PersistentVariables:
         :param newValue: any value hashable by the json library
         :return:
         '''
+        if not isinstance(varName, str):
+            # json requires keys to be str
+            varName = str(varName)
 
         data = self.Data
 
@@ -72,9 +75,9 @@ class PersistentVariables:
         # Write new file
         with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
             if self._fileMode == 'b':
-                file.write(json.dumps(data, indent=2).encode(encoding='iso-8859-1'))
+                file.write(json.dumps(data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
             else:
-                file.write(json.dumps(data, indent=2))
+                file.write(json.dumps(data, indent=2, sort_keys=True))
             file.close()
 
     @property
@@ -107,9 +110,9 @@ class PersistentVariables:
     def Save(self, data):
         with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
             if self._fileMode == 'b':
-                file.write(json.dumps(data, indent=2).encode(encoding='iso-8859-1'))
+                file.write(json.dumps(data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
             else:
-                file.write(json.dumps(data, indent=2))
+                file.write(json.dumps(data, indent=2, sort_keys=True))
             file.close()
 
     def Get(self, varName=None, default=None):

@@ -100,7 +100,7 @@ class PersistentVariables:
 
             except Exception as e:
                 # probably the encryption key changed
-                oldPrint('pv Exception:', e)
+                #oldPrint('pv Exception:', e)
                 data = {}
 
             file.close()

@@ -1,4 +1,9 @@
-from extronlib.system import File
+try:
+    from extronlib.system import File
+except Exception as e:
+    print(e)
+    File = open
+
 import json
 
 DEBUG = False

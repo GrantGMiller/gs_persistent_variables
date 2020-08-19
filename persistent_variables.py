@@ -6,7 +6,7 @@ except Exception as e:
 
 import json
 
-DEBUG = True
+DEBUG = False
 
 oldPrint = print
 

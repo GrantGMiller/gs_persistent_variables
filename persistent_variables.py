@@ -1,12 +1,12 @@
 try:
-    from extronlib.system import File
+    from extronlib.system import File, Wait
 except Exception as e:
     print(e)
     File = open
 
 import json
 
-DEBUG = False
+DEBUG = True
 
 oldPrint = print
 
@@ -42,10 +42,34 @@ class PersistentVariables:
         self._valueChangesCallback = None
 
         self._CreateFileIfMissing()
+        self._data = self._GetDataFromFile()
+        self._waitSave = Wait(1, self.DoSave)
+        self._waitSave.Cancel()
+
+    def _GetDataFromFile(self):
+        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
+            print('78 file=', file)
+
+            try:
+                if self._fileMode == 'b':
+                    b = file.read()
+                    print('82 b=', b)
+                    data = json.loads(b.decode(encoding='iso-8859-1'))
+                else:
+                    data = json.loads(file.read())
+
+            except Exception as e:
+                # probably the encryption key changed
+                # oldPrint('pv Exception:', e)
+                data = {}
+
+            file.close()
+
+        return data
 
     def _CreateFileIfMissing(self):
         if not self._fileClass.Exists(self.filename):
-            # If the file doesnt exist yet, create a blank file
+            print('If the file doesnt exist yet, create a blank file')
             with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
                 if self._fileMode == 'b':
                     file.write(json.dumps({}).encode(encoding='iso-8859-1'))
@@ -60,14 +84,13 @@ class PersistentVariables:
         :param newValue: any value hashable by the json library
         :return:
         '''
+        print('Set(', varName, newValue)
         if not isinstance(varName, str):
             # json requires keys to be str
             varName = str(varName)
 
-        data = self.Data
-
         # get the old value
-        oldValue = data.get(varName, None)
+        oldValue = self._data.get(varName, None)
 
         # if the value is different do the callback
         if oldValue != newValue:
@@ -75,49 +98,25 @@ class PersistentVariables:
                 self._valueChangesCallback(varName, newValue)
 
         # Add/update the new value
-        data[varName] = newValue
+        self._data[varName] = newValue
 
-        # Write new file
-        with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
-            if self._fileMode == 'b':
-                file.write(json.dumps(data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
-            else:
-                file.write(json.dumps(data, indent=2, sort_keys=True))
-            file.close()
+        self.Save()
 
     @property
     def Data(self):
-        print('PV.Data')
-        self._CreateFileIfMissing()
-        # If the varName does not exist, return None
+        return self._data
 
-        # load the current file
-        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-            print('78 file=', file)
+    def Save(self):
+        print('Save()')
+        self._waitSave.Restart()
 
-            try:
-                if self._fileMode == 'b':
-                    b = file.read()
-                    print('82 b=', b)
-                    data = json.loads(b.decode(encoding='iso-8859-1'))
-                else:
-                    data = json.loads(file.read())
-
-            except Exception as e:
-                # probably the encryption key changed
-                #oldPrint('pv Exception:', e)
-                data = {}
-
-            file.close()
-
-        return data
-
-    def Save(self, data):
+    def DoSave(self):
+        print('DoSave()')
         with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
             if self._fileMode == 'b':
-                file.write(json.dumps(data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
+                file.write(json.dumps(self._data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
             else:
-                file.write(json.dumps(data, indent=2, sort_keys=True))
+                file.write(json.dumps(self._data, indent=2, sort_keys=True))
             file.close()
 
     def Get(self, varName=None, default=None):
@@ -127,14 +126,13 @@ class PersistentVariables:
         param default: returned if the varName is not found
         :return:
         '''
-        data = self.Data
 
         if varName is None and default is None:
-            return data.copy()
+            return self._data.copy()
 
         # Grab the value and return it
         try:
-            varValue = data[varName]
+            varValue = self._data[varName]
         except KeyError:
             varValue = default
             self.Set(varName, varValue)
@@ -142,21 +140,10 @@ class PersistentVariables:
         return varValue
 
     def Delete(self, varName):
-        self._CreateFileIfMissing()
         # If the varName does not exist, return None
-
-        # load the current file
-        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-            if self._fileMode == 'b':
-                b = file.read()
-                print('82 b=', b)
-                data = json.loads(b.decode(encoding='iso-8859-1'))
-            else:
-                data = json.loads(file.read())
-            file.close()
-
-        data.pop(varName, None)
-        self.Save(data)
+        val = self._data.pop(varName, None)
+        self.Save()
+        return val
 
     @property
     def ValueChanges(self):
@@ -168,3 +155,10 @@ class PersistentVariables:
 
     def __str__(self):
         return '<PersistentVariables, filename={}>'.format(self.filename)
+
+
+if __name__ == '__main__':
+    pv = PersistentVariables('test.json')
+    for i in range(10):
+        pv.Set(i, i)
+    print('end test')

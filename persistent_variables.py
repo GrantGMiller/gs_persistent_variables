@@ -102,6 +102,11 @@ class PersistentVariables:
 
         self.Save()
 
+    def Pop(self, key, default=None):
+        ret = self._data.pop(key, default)
+        self.Save()
+        return ret
+
     @property
     def Data(self):
         return self._data
@@ -138,6 +143,32 @@ class PersistentVariables:
             self.Set(varName, varValue)
 
         return varValue
+
+    def Append(self, key, item):
+        l = self.Get(key, [])
+        l.append(item)
+        self.Set(key, l)
+        return l
+
+    def Remove(self, key, item):
+        l = self.Get(key, [])
+        if item in l:
+            ret = l.remove(item)
+            self.Set(key, l)
+        else:
+            ret = None
+        return ret
+
+    def SetItem(self, key, subKey, item):
+        d = self.Get(key, {})
+        d[subKey] = item
+        self.Set(key, d)
+
+    def PopItem(self, key, subkey):
+        d = self.Get(key, {})
+        ret = d.pop(subkey)
+        self.Set(key, d)
+        return ret
 
     def Delete(self, varName):
         # If the varName does not exist, return None

@@ -144,11 +144,13 @@ class PersistentVariables:
 
         return varValue
 
-    def Append(self, key, item):
-        l = self.Get(key, [])
-        l.append(item)
-        self.Set(key, l)
-        return l
+    def Append(self, key, item, allowDuplicates=True):
+        tempList = self.Get(key, [])
+        tempList.append(item)
+        if allowDuplicates is False:
+            tempList = list(set(tempList))
+        self.Set(key, tempList)
+        return tempList
 
     def Remove(self, key, item):
         l = self.Get(key, [])

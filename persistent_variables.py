@@ -166,6 +166,10 @@ class PersistentVariables:
         d[subKey] = item
         self.Set(key, d)
 
+    def GetItem(self, key, subKey, default=None):
+        d = self.Get(key, {})
+        return d.get(subKey, default)
+
     def PopItem(self, key, subkey, *args):
         d = self.Get(key, {})
 

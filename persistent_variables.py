@@ -1,3 +1,5 @@
+import time
+
 try:
     from extronlib.system import File, Wait
 except Exception as e:
@@ -41,6 +43,7 @@ class PersistentVariables:
 
         self._valueChangesCallback = None
 
+        # init
         self._CreateFileIfMissing()
         self._data = self._GetDataFromFile()
         self._waitSave = Wait(1, self.DoSave)

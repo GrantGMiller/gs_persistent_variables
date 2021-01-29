@@ -41,34 +41,35 @@ class PersistentVariables:
             filename = 'persistent_variables.json'
         self.filename = filename
 
+        self._filename_backup = 'backup_{}'.format(self.filename)
+
         self._valueChangesCallback = None
 
         # init
         self._CreateFileIfMissing()
         self._data = self._GetDataFromFile()
-        self._waitSave = Wait(1, self.DoSave)
+        self._waitSave = Wait(3, self.DoSave)
         self._waitSave.Cancel()
 
     def _GetDataFromFile(self):
-        with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-            print('78 file=', file)
-
+        for filename in [self.filename, self._filename_backup]:
             try:
-                if self._fileMode == 'b':
-                    b = file.read()
-                    print('82 b=', b)
-                    data = json.loads(b.decode(encoding='iso-8859-1'))
-                else:
-                    data = json.loads(file.read())
+                with self._fileClass(filename, mode='r' + self._fileMode) as file:
+                    print('78 file=', file)
 
+                    if self._fileMode == 'b':
+                        b = file.read()
+                        print('82 b=', b)
+                        data = json.loads(b.decode(encoding='iso-8859-1'))
+                    else:
+                        data = json.loads(file.read())
+
+                    if data:
+                        return data
             except Exception as e:
-                # probably the encryption key changed
-                # oldPrint('pv Exception:', e)
-                data = {}
+                print(e)
 
-            file.close()
-
-        return data
+        return {}  # failed to read from file
 
     def _CreateFileIfMissing(self):
         if not self._fileClass.Exists(self.filename):
@@ -78,7 +79,14 @@ class PersistentVariables:
                     file.write(json.dumps({}).encode(encoding='iso-8859-1'))
                 else:
                     file.write(json.dumps({}))
-                file.close()
+
+        if not self._fileClass.Exists(self._filename_backup):
+            print('If the file doesnt exist yet, create a blank file')
+            with self._fileClass(self._filename_backup, mode='w' + self._fileMode) as file:
+                if self._fileMode == 'b':
+                    file.write(json.dumps({}).encode(encoding='iso-8859-1'))
+                else:
+                    file.write(json.dumps({}))
 
     def Set(self, varName, newValue):
         '''
@@ -125,7 +133,12 @@ class PersistentVariables:
                 file.write(json.dumps(self._data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
             else:
                 file.write(json.dumps(self._data, indent=2, sort_keys=True))
-            file.close()
+
+        with self._fileClass(self._filename_backup, mode='w' + self._fileMode) as file:
+            if self._fileMode == 'b':
+                file.write(json.dumps(self._data, indent=2, sort_keys=True).encode(encoding='iso-8859-1'))
+            else:
+                file.write(json.dumps(self._data, indent=2, sort_keys=True))
 
     def Get(self, varName=None, default=None):
         '''
@@ -200,6 +213,10 @@ class PersistentVariables:
 
     def __str__(self):
         return '<PersistentVariables, filename={}>'.format(self.filename)
+
+    def __del__(self):
+        self._waitSave.Cancel()
+        self.DoSave()
 
 
 if __name__ == '__main__':

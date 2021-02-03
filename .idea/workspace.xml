@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0abda540-ca84-4b75-abaf-3046af968643" name="Default" comment="added README.rst" />
+    <list default="true" id="0abda540-ca84-4b75-abaf-3046af968643" name="Default" comment="added backup file" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +29,13 @@
     <option name="PATCH_PATH" value="" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="refactor" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectId" id="1bBU3biQ7f73wscv2MI7ioz2l00" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -66,6 +72,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_pv" />
+        <item itemvalue="Python.test_pv" />
         <item itemvalue="Python.test_pv" />
       </list>
     </recent_temporary>
@@ -115,6 +123,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added default value option to PV.Get('varname', defaultValue=None)" />

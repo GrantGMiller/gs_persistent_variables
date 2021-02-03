@@ -1,11 +1,8 @@
-import time
-
 try:
-    from extronlib.system import File, Wait
+    from extronlib.system import File, Wait, ProgramLog
 except Exception as e:
     print(e)
     File = open
-
 import json
 
 DEBUG = False
@@ -41,15 +38,18 @@ class PersistentVariables:
             filename = 'persistent_variables.json'
         self.filename = filename
 
-        self._filename_backup = 'backup_{}'.format(self.filename)
+        name = self.filename.split('/')[-1]
+        backupName = 'backup_{}'.format(name)
+        self._filename_backup = '/'.join(self.filename.split('/')[:-1] + [backupName])
 
         self._valueChangesCallback = None
 
         # init
-        self._CreateFileIfMissing()
-        self._data = self._GetDataFromFile()
         self._waitSave = Wait(3, self.DoSave)
         self._waitSave.Cancel()
+
+        self._CreateFileIfMissing()
+        self._data = self._GetDataFromFile()
 
     def _GetDataFromFile(self):
         for filename in [self.filename, self._filename_backup]:
@@ -73,7 +73,7 @@ class PersistentVariables:
 
     def _CreateFileIfMissing(self):
         if not self._fileClass.Exists(self.filename):
-            print('If the file doesnt exist yet, create a blank file')
+            print('76 The file doesnt exist yet, create a blank file')
             with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
                 if self._fileMode == 'b':
                     file.write(json.dumps({}).encode(encoding='iso-8859-1'))
@@ -81,7 +81,7 @@ class PersistentVariables:
                     file.write(json.dumps({}))
 
         if not self._fileClass.Exists(self._filename_backup):
-            print('If the file doesnt exist yet, create a blank file')
+            print('84 The backup file doesnt exist yet, create a blank file')
             with self._fileClass(self._filename_backup, mode='w' + self._fileMode) as file:
                 if self._fileMode == 'b':
                     file.write(json.dumps({}).encode(encoding='iso-8859-1'))
@@ -215,8 +215,11 @@ class PersistentVariables:
         return '<PersistentVariables, filename={}>'.format(self.filename)
 
     def __del__(self):
-        self._waitSave.Cancel()
-        self.DoSave()
+        try:
+            self._waitSave.Cancel()
+            self.DoSave()
+        except Exception as e:
+            ProgramLog(str(e))
 
 
 if __name__ == '__main__':

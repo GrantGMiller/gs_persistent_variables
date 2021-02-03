@@ -189,10 +189,7 @@ class PersistentVariables:
     def PopItem(self, key, subkey, *args):
         d = self.Get(key, {})
 
-        if args:
-            ret = d.pop(subkey, *args)
-        else:
-            ret = d.pop(subkey)
+        ret = d.pop(subkey, *args)
 
         self.Set(key, d)
         return ret

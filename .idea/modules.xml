@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/../tcp-connection-handler/.idea/connection-handler.iml" filepath="$PROJECT_DIR$/../tcp-connection-handler/.idea/connection-handler.iml" />
       <module fileurl="file://$PROJECT_DIR$/../extronlib-clone/.idea/extronlib-clone.iml" filepath="$PROJECT_DIR$/../extronlib-clone/.idea/extronlib-clone.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/persistant-variables.iml" filepath="$PROJECT_DIR$/.idea/persistant-variables.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../simple_tcp/.idea/simple_socket.iml" filepath="$PROJECT_DIR$/../simple_tcp/.idea/simple_socket.iml" />
     </modules>
   </component>
 </project>

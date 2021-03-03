@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../extronlib-clone" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../simple_tcp" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../tcp-connection-handler" vcs="Git" />
   </component>
 </project>

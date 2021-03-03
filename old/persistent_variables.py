@@ -1,4 +1,8 @@
-from extronlib.system import File, ProgramLog, Timer
+try:
+    from extronlib_pro import File, Wait, ProgramLog
+except Exception as e:
+    print(e)
+    from extronlib.system import File, Wait, ProgramLog
 import json
 
 
@@ -28,15 +32,19 @@ class PersistentVariables:
             filename = 'persistent_variables.json'
         self.filename = filename
 
+        name = self.filename.split('/')[-1]
+        backupName = 'backup_{}'.format(name)
+        self._filename_backup = '/'.join(self.filename.split('/')[:-1] + [backupName])
+
         self._valueChangesCallback = None
 
         # init
+        self._waitSave = Wait(3, self.DoSave)
+        self._waitSave.Cancel()
+
         self._CreateFileIfMissing()
         self._data = self._GetDataFromFile()
         self.print('PV.__init__(', filename, fileClass, fileMode, debug)
-
-        self.shouldSave = False
-        self.timer = Timer(10, self.DoSave)
 
     def print(self, *a, **k):
         if self.debug:
@@ -44,31 +52,40 @@ class PersistentVariables:
 
     def _GetDataFromFile(self):
         self.print('_GetDataFromFile', self)
-        try:
-            with self._fileClass(self.filename, mode='r' + self._fileMode) as file:
-                self.print('78 file=', file)
+        for filename in [self.filename, self._filename_backup]:
+            try:
+                with self._fileClass(filename, mode='r' + self._fileMode) as file:
+                    self.print('78 file=', file)
 
-                if self._fileMode == 'b':
-                    b = file.read()
-                    self.print('82 b=', b)
-                    data = json.loads(b.decode(encoding='iso-8859-1'))
-                else:
-                    data = json.load(file)
+                    if self._fileMode == 'b':
+                        b = file.read()
+                        self.print('82 b=', b)
+                        data = json.loads(b.decode(encoding='iso-8859-1'))
+                    else:
+                        data = json.load(file)
 
-        except Exception as e:
-            self.print(e)
-            data = {}
+            except Exception as e:
+                self.print(e)
+                data = {}
 
-        if data:
-            return data
-        else:
-            return {}
+            if data:
+                return data
+
+        return {}  # failed to read from file
 
     def _CreateFileIfMissing(self):
         self.print('_CreateFileIfMissing', self)
         if not self._fileClass.Exists(self.filename):
             self.print('76 The file doesnt exist yet, create a blank file')
             with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
+                if self._fileMode == 'b':
+                    file.write(json.dumps({}).encode(encoding='iso-8859-1'))
+                else:
+                    file.write(json.dumps({}))
+
+        if not self._fileClass.Exists(self._filename_backup):
+            self.print('84 The backup file doesnt exist yet, create a blank file')
+            with self._fileClass(self._filename_backup, mode='w' + self._fileMode) as file:
                 if self._fileMode == 'b':
                     file.write(json.dumps({}).encode(encoding='iso-8859-1'))
                 else:
@@ -114,19 +131,24 @@ class PersistentVariables:
         return self._data
 
     def Save(self):
-        self.shouldSave = True
+        self.print('Save()', self)
+        self._waitSave.Restart()
 
-    def DoSave(self, *a, **k):
-        if self.shouldSave:
-            self.shouldSave = False
-            self.print('DoSave()', self)
-            dumpString = json.dumps(self._data, indent=2)
-            self.print('len(dumpString)=', len(dumpString), self)
-            with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
-                if self._fileMode == 'b':
-                    file.write(dumpString.encode(encoding='iso-8859-1'))
-                else:
-                    file.write(dumpString)
+    def DoSave(self):
+        self.print('DoSave()', self)
+        dumpString = json.dumps(self._data, indent=2, sort_keys=True)
+        self.print('len(dumpString)=', len(dumpString), self)
+        with self._fileClass(self.filename, mode='w' + self._fileMode) as file:
+            if self._fileMode == 'b':
+                file.write(dumpString.encode(encoding='iso-8859-1'))
+            else:
+                file.write(dumpString)
+
+        with self._fileClass(self._filename_backup, mode='w' + self._fileMode) as file:
+            if self._fileMode == 'b':
+                file.write(dumpString.encode(encoding='iso-8859-1'))
+            else:
+                file.write(dumpString)
 
     def Get(self, varName=None, default=None):
         '''
@@ -211,12 +233,16 @@ class PersistentVariables:
         return '<PersistentVariables, filename={}>'.format(self.filename)
 
     def __del__(self):
-        self.timer.Stop()
-        self.timer.Function()
+        self.print('PV.__del__', self)
+        try:
+            self._waitSave.Cancel()
+            self.DoSave()
+        except Exception as e:
+            ProgramLog(str(e))
 
 
 if __name__ == '__main__':
-    pv = PersistentVariables('test.json')
+    pv = PersistentVariables('../test.json')
     for i in range(10):
         pv.Set(i, i)
     print('end test')

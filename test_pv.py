@@ -1,5 +1,4 @@
-from persistent_variables import PersistentVariables
-import aes_tools
+from old.persistent_variables import PersistentVariables
 
 #aes_tools.File.DeleteFile('persistent_variables.json')
 

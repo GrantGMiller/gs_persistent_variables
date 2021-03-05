@@ -6,7 +6,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="aes-tools" />
     <orderEntry type="module" module-name="connection-handler" />
-    <orderEntry type="module" module-name="extronlib-clone" />
     <orderEntry type="module" module-name="simple_socket" />
   </component>
   <component name="PackageRequirementsSettings">

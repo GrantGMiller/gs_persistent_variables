@@ -4,8 +4,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="aes-tools" />
-    <orderEntry type="module" module-name="connection-handler" />
     <orderEntry type="module" module-name="simple_socket" />
   </component>
   <component name="PackageRequirementsSettings">

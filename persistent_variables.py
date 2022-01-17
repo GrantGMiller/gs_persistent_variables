@@ -148,12 +148,16 @@ class PersistentVariables:
 
         return varValue
 
-    def Append(self, key, item, allowDuplicates=True):
+    def Append(self, key, item, allowDuplicates=True, maxlen=None):
         self.print('Append(', key, item, allowDuplicates, self)
         tempList = self.Get(key, [])
         if not tempList:
             tempList = []
         tempList.append(item)
+
+        while maxlen and len(tempList) > maxlen:
+            tempList.pop(0)
+
         if allowDuplicates is False:
             tempList = list(set(tempList))
         self.Set(key, tempList)

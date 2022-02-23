@@ -20,17 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0abda540-ca84-4b75-abaf-3046af968643" name="Default" comment="added backup file">
-      <change afterPath="$PROJECT_DIR$/old/persistent_variables.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_mem_leak.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../extronlib-clone/extronlib/system.py" beforeDir="false" afterPath="$PROJECT_DIR$/../extronlib-clone/extronlib/system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../extronlib-clone/pv.py" beforeDir="false" afterPath="$PROJECT_DIR$/../extronlib-clone/pv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/persistant-variables.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/persistant-variables.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/persistent_variables.py" beforeDir="false" afterPath="$PROJECT_DIR$/persistent_variables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_pv.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_pv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../simple_tcp/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/../simple_tcp/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcp-connection-handler/connection_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcp-connection-handler/connection_handler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +57,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../simple_tcp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
